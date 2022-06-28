@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import s from './Modal.module.css';
 
-export default function Modal({ onClose, onOpen, currentElemForModal }) {
+export default function Modal({ onClose, currentElemForModal }) {
     const modalRoot = document.querySelector('#modal-root');
   useEffect(() => {
     window.addEventListener('keydown', onModalEscPress);
