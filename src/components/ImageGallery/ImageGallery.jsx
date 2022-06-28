@@ -18,14 +18,13 @@ export default function ImageGallery({ imageName }) {
   const [searchRequest, setSearchRequest] = useReducer(responseReducer, null);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
-  const [currentElemForModal, setCurrentElemForModal] = useState(()=>null);
+  const [currentElemForModal, setCurrentElemForModal] = useState(() => null);
   const [page, setPage] = useState(1);
 
   const { isOpen, open, close } = useToggle();
 
   function responseReducer(prevResponse, nextResponse) {
     if (prevResponse) {
-      console.log('prev', prevResponse,'next', nextResponse, 'imageName' ,imageName)
       return [...prevResponse, ...nextResponse];
     } else if (prevResponse === null) {
       return nextResponse;
@@ -49,7 +48,7 @@ export default function ImageGallery({ imageName }) {
   }, [imageName, page]);
 
   const openModal = e => {
-    if(e.target !== e.currentTarget){
+    if (e.target !== e.currentTarget) {
       const currentImg = searchRequest.find(
         elem => elem.id.toString() === e.target.dataset.id
       );
