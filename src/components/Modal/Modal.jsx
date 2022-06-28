@@ -9,6 +9,7 @@ export default function Modal({ onClose, currentElemForModal }) {
     return () => {
       window.removeEventListener('keydown', onModalEscPress);  
     }
+    // eslint-disable-next-line
   }, []);
 
   const onModalEscPress = e => {
