@@ -8,7 +8,7 @@ export default function Modal({ onClose, currentElemForModal }) {
     window.addEventListener('keydown', onModalEscPress);
     return () => {
       window.removeEventListener('keydown', onModalEscPress);  
-    };
+    }
   }, []);
 
   const onModalEscPress = e => {
