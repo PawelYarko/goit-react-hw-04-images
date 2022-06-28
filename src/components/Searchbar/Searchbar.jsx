@@ -14,7 +14,6 @@ export default function Searchbar ({onSubmit}) {
     e.preventDefault();
 
     if (inputValue.trim() === '') {
-      console.log('строка пустая');
       return;
     }
 
