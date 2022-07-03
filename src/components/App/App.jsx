@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect } from 'react';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
@@ -18,7 +18,7 @@ const Status = {
 
 export default function App() {
   const [imageName, setImageName] = useState('');
-  const [searchRequest, setSearchRequest] = useReducer(responseReducer, []);
+  const [searchRequest, setSearchRequest] = useState([]);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
   const [currentElemForModal, setCurrentElemForModal] = useState(() => null);
@@ -26,21 +26,13 @@ export default function App() {
 
   const { isOpen, open, close } = useToggle();
 
-  function responseReducer(prevResponse, nextResponse) {
-    if (prevResponse) {
-      return [...prevResponse, ...nextResponse];
-    } else if (prevResponse === null) {
-      return nextResponse;
-    }
-  }
-
   useEffect(() => {
     if (!imageName) {
       return;
     }
     fetchRequest(imageName, page)
-      .then(response => {
-        setSearchRequest(response);
+      .then(hits => {
+        setSearchRequest(response => [...response, ...hits]);
         setStatus(Status.RESOLVE);
       })
       .catch(error => {
