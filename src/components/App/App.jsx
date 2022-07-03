@@ -1,18 +1,83 @@
-import { useState } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
+import Modal from 'components/Modal/Modal';
+import Button from 'components/Button/Button';
+import Loader from '../Loader/Loader';
+import fetchRequest from '../../service/fetchRequest';
+import useToggle from '../../hooks/useToggle/useToggle';
 import s from './App.module.css';
+
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  REJECTED: 'rejected',
+  RESOLVE: 'resolved',
+};
 
 export default function App() {
   const [imageName, setImageName] = useState('');
+  const [searchRequest, setSearchRequest] = useReducer(responseReducer, []);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState('idle');
+  const [currentElemForModal, setCurrentElemForModal] = useState(() => null);
+  const [page, setPage] = useState(1);
 
-  const handleFormSubmit = (imageName) => setImageName(imageName);
+  const { isOpen, open, close } = useToggle();
+
+  function responseReducer(prevResponse, nextResponse) {
+    if (prevResponse) {
+      return [...prevResponse, ...nextResponse];
+    } else if (prevResponse === null) {
+      return nextResponse;
+    }
+  }
+
+  useEffect(() => {
+    if (!imageName) {
+      return;
+    }
+    fetchRequest(imageName, page)
+      .then(response => {
+        setSearchRequest(response);
+        setStatus(Status.RESOLVE);
+      })
+      .catch(error => {
+        setError(error);
+        setStatus(Status.REJECTED);
+      });
+  }, [imageName, page]);
+
+  const openModal = img => {
+    setCurrentElemForModal(img);
+    open();
+  };
+
+  const onBtnLoadClick = () => setPage(page + 1);
+
+  const handleFormSubmit = inputValue => {
+    setImageName(inputValue);
+    setSearchRequest([])
+  };
 
   return (
     <div className={s.container}>
       <Searchbar onSubmit={handleFormSubmit} />
-      <ImageGallery imageName={imageName} />
+      {status === Status.IDLE && <div>Введите запрос в поле ввода</div>}
+      {status === Status.PENDING && <Loader />}
+      {status === Status.REJECTED && <h1>{error}</h1>}
+      {status === Status.RESOLVE && (
+        <ImageGallery searchRequest={searchRequest} openModal={openModal} />
+      )}
+      {isOpen && (
+        <Modal
+          onClose={close}
+          onOpen={open}
+          currentElemForModal={currentElemForModal}
+        />
+      )}
+      <Button onBtnLoadClick={onBtnLoadClick} />
     </div>
   );
 }
