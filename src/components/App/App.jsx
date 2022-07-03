@@ -50,7 +50,7 @@ export default function App() {
 
   const handleFormSubmit = inputValue => {
     setImageName(inputValue);
-    setSearchRequest([])
+    setSearchRequest([]);
   };
 
   return (
