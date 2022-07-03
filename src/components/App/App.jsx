@@ -3,7 +3,6 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Modal from 'components/Modal/Modal';
-import Button from 'components/Button/Button';
 import Loader from '../Loader/Loader';
 import fetchRequest from '../../service/fetchRequest';
 import useToggle from '../../hooks/useToggle/useToggle';
@@ -60,7 +59,7 @@ export default function App() {
       {status === Status.PENDING && <Loader />}
       {status === Status.REJECTED && <h1>{error}</h1>}
       {status === Status.RESOLVE && (
-        <ImageGallery searchRequest={searchRequest} openModal={openModal} />
+        <ImageGallery searchRequest={searchRequest} openModal={openModal} onBtnLoadClick={onBtnLoadClick} />
       )}
       {isOpen && (
         <Modal
@@ -69,7 +68,6 @@ export default function App() {
           currentElemForModal={currentElemForModal}
         />
       )}
-      <Button onBtnLoadClick={onBtnLoadClick} />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
+import Button from 'components/Button/Button';
 import s from './ImageGallery.module.css';
 
 
-export default function ImageGallery({ searchRequest, openModal }) {
+export default function ImageGallery({ searchRequest, openModal , onBtnLoadClick}) {
   return (
     <div className={s.content}>
       <ul className={s.gallery}>
@@ -12,6 +13,7 @@ export default function ImageGallery({ searchRequest, openModal }) {
           );
         })}
       </ul>
+      <Button onBtnLoadClick={onBtnLoadClick} />
     </div>
   );
 }
