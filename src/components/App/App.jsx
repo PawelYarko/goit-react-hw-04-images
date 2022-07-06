@@ -29,15 +29,27 @@ export default function App() {
     if (!imageName) {
       return;
     }
-    fetchRequest(imageName, page)
-      .then(hits => {
-        setSearchRequest(response => [...response, ...hits]);
+    // fetchRequest(imageName, page)
+    //   .then(hits => {
+    //     setSearchRequest(response => [...response, ...hits]);
+    //     setStatus(Status.RESOLVE);
+    //   })
+    //   .catch(error => {
+    //     setError(error);
+    //     setStatus(Status.REJECTED);
+    //   });
+
+    async function get() {
+      try {
+        const images = await fetchRequest(imageName, page);
+        setSearchRequest(response => [...response, ...images]);
         setStatus(Status.RESOLVE);
-      })
-      .catch(error => {
+      } catch (error) {
         setError(error);
         setStatus(Status.REJECTED);
-      });
+      }
+    }
+    get();
   }, [imageName, page]);
 
   const openModal = img => {
@@ -59,7 +71,11 @@ export default function App() {
       {status === Status.PENDING && <Loader />}
       {status === Status.REJECTED && <h1>{error}</h1>}
       {status === Status.RESOLVE && (
-        <ImageGallery searchRequest={searchRequest} openModal={openModal} onBtnLoadClick={onBtnLoadClick} />
+        <ImageGallery
+          searchRequest={searchRequest}
+          openModal={openModal}
+          onBtnLoadClick={onBtnLoadClick}
+        />
       )}
       {isOpen && (
         <Modal
